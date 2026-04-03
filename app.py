@@ -67,7 +67,6 @@ st.markdown(
     /* Normal button */
     div.stButton > button {
         background-color: #A8E0CC;
-        color: white;
         border-radius: 8px;
         padding: 10px;
         font-weight: 600;
@@ -78,7 +77,6 @@ st.markdown(
 
     div.stButton > button:hover {
         background-color: white;
-        color: white;
     }
 
     /* Divider */
