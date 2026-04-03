@@ -86,17 +86,27 @@ Scale features using MinMaxScaler
 
 # Train models:
 Logistic Regression
+
 Decision Tree
+
 Random Forest
-Evaluate models using:
+
+# Evaluate models using:
 Accuracy
+
 Confusion Matrix
+
 Select best model (Logistic Regression)
+
 Save model and artifacts
+
 Use model in Streamlit app for prediction
-Model Performance
+
+# Model Performance
 Logistic Regression Accuracy: ~80.4%
+
 Random Forest Accuracy: ~78%
+
 Decision Tree Accuracy: ~69%
 
 The Logistic Regression model performs best and meets the required accuracy (>76%).
