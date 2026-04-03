@@ -149,12 +149,6 @@ with center_col:
     # This block creates the form section
     with form_col:
 
-        #  opens a styled form container
-        st.markdown('<div class="glass-box">', unsafe_allow_html=True)
-
-        #  displays the section title
-        st.markdown('<div class="section-title">Applicant Details</div>', unsafe_allow_html=True)
-
         #  creates the first row of inputs
         row1_col1, row1_col2, row1_col3 = st.columns(3)
 
