@@ -1,97 +1,97 @@
-# This line imports pickle for loading saved objects
+#  imports pickle for loading saved artifacts.
 import pickle
 
-# This line imports pandas for creating input DataFrame
+#  imports pandas for input preparation.
 import pandas as pd
 
-# This line imports saved model paths
+#  imports artifact paths from the config file.
 from src.config import MODEL_FILE_PATH, FEATURE_COLUMNS_FILE_PATH
 
-# This line imports the logger
+#  imports the logger helper.
 from src.logger import get_logger
 
-# This line imports the custom exception
+#  imports the custom exception class.
 from src.custom_exception import ProjectException
 
-# This line creates a logger for this file
+#  creates a logger for this module.
 logger = get_logger(__name__)
 
-# This function loads the saved model and feature columns
+# This function loads the trained model and saved feature list.
 def load_model_and_features():
-    # This line starts the try block
+    #  starts protected execution.
     try:
-        # This line opens the model file in read binary mode
+        #  opens the saved model file.
         with open(MODEL_FILE_PATH, "rb") as model_file:
-            # This line loads the trained model
+            #  loads the trained model.
             model = pickle.load(model_file)
 
-        # This line opens the feature columns file in read binary mode
+        #  opens the saved feature list file.
         with open(FEATURE_COLUMNS_FILE_PATH, "rb") as feature_file:
-            # This line loads the feature columns
+            #  loads the feature columns.
             feature_columns = pickle.load(feature_file)
 
-        # This line logs successful loading
-        logger.info("Model and feature columns loaded successfully")
+        #  logs successful loading.
+        logger.info("Model artifacts loaded successfully.")
 
-        # This line returns the loaded model and feature columns
+        #  returns the model and feature list.
         return model, feature_columns
 
-    # This block handles loading errors
+    # This block handles loading errors.
     except Exception as exc:
-        # This line logs the error
-        logger.error("Error occurred while loading model or features")
+        #  logs the error.
+        logger.error("Loading model artifacts failed.")
 
-        # This line raises a custom exception
+        #  raises a project specific exception.
         raise ProjectException(f"Failed to load model artifacts: {exc}")
 
-# This function converts user input into the format needed by the model
+# This function converts a user input dictionary into a model ready DataFrame.
 def prepare_input_data(user_input: dict, feature_columns: list):
-    # This line starts the try block
+    #  starts protected execution.
     try:
-        # This line creates a DataFrame from user input
+        #  converts the input dictionary into a one row DataFrame.
         input_df = pd.DataFrame([user_input])
 
-        # This line applies one hot encoding to input data
+        #  applies one hot encoding to categorical values.
         input_df = pd.get_dummies(input_df, dtype=int)
 
-        # This line matches input columns to training columns
+        #  reorders the columns to match the training feature order.
         input_df = input_df.reindex(columns=feature_columns, fill_value=0)
 
-        # This line returns the prepared DataFrame
+        #  returns the prepared input DataFrame.
         return input_df
 
-    # This block handles input preparation errors
+    # This block handles input preparation errors.
     except Exception as exc:
-        # This line logs the error
-        logger.error("Error occurred while preparing input data")
+        #  logs the error.
+        logger.error("Preparing input data failed.")
 
-        # This line raises a custom exception
+        #  raises a project specific exception.
         raise ProjectException(f"Failed to prepare input data: {exc}")
 
-# This function predicts the loan result
+# This function predicts the loan status from user input.
 def predict_loan_status(user_input: dict):
-    # This line starts the try block
+    #  starts protected execution.
     try:
-        # This line loads the model and feature list
+        #  loads the model and feature names.
         model, feature_columns = load_model_and_features()
 
-        # This line prepares user input
+        #  prepares the user input for prediction.
         input_df = prepare_input_data(user_input, feature_columns)
 
-        # This line predicts the result
+        #  generates the model prediction.
         prediction = model.predict(input_df)[0]
 
-        # This line returns human readable output
+        #  returns the approved label when prediction is positive.
         if prediction == 1:
             return "Approved"
 
-        # This line returns the negative result
+        #  returns the negative label when prediction is zero.
         return "Not Approved"
 
-    # This block handles prediction errors
+    # This block handles prediction errors.
     except Exception as exc:
-        # This line logs the error
-        logger.error("Error occurred during prediction")
+        #  logs the error.
+        logger.error("Prediction failed.")
 
-        # This line raises a custom exception
+        #  raises a project specific exception.
         raise ProjectException(f"Failed to predict loan status: {exc}")

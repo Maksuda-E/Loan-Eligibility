@@ -1,23 +1,23 @@
-# This line imports the logging module for logging messages
+#  imports the logging module.
 import logging
 
-# This line imports os for folder creation
+#  imports the os module.
 import os
 
-# This line imports the logs folder path and log file path from config
+#  imports the logs directory path.
 from src.config import LOGS_DIR, LOG_FILE_PATH
 
-# This line creates the logs folder if it does not already exist
+#  creates the logs directory if it does not already exist.
 os.makedirs(LOGS_DIR, exist_ok=True)
 
-# This line configures the logging system
+#  configures the base logger.
 logging.basicConfig(
     filename=LOG_FILE_PATH,
     level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s %(message)s"
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
 )
 
-# This function returns a logger object for the given file name
+# This function returns a logger object for a given name.
 def get_logger(name: str):
-    # This line returns a logger with the given name
+    #  returns the logger.
     return logging.getLogger(name)

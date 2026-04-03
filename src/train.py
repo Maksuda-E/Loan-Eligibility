@@ -1,86 +1,86 @@
-# This line imports os for folder creation
+#  imports os for directory creation.
 import os
 
-# This line imports pickle for saving the model
+#  imports pickle for saving artifacts.
 import pickle
 
-# This line imports LogisticRegression as the classifier
+#  imports LogisticRegression.
 from sklearn.linear_model import LogisticRegression
 
-# This line imports MinMaxScaler for feature scaling
+#  imports MinMaxScaler.
 from sklearn.preprocessing import MinMaxScaler
 
-# This line imports Pipeline for combining scaler and model
+#  imports Pipeline for chaining preprocessing and model steps.
 from sklearn.pipeline import Pipeline
 
-# This line imports config values
+#  imports project configuration values.
 from src.config import ARTIFACTS_DIR, MODEL_FILE_PATH, FEATURE_COLUMNS_FILE_PATH, RANDOM_STATE
 
-# This line imports the logger
+#  imports the logger helper.
 from src.logger import get_logger
 
-# This line imports the custom exception
+#  imports the custom exception class.
 from src.custom_exception import ProjectException
 
-# This line creates a logger for this file
+#  creates a logger for this module.
 logger = get_logger(__name__)
 
-# This function trains the model
+# This function trains the logistic regression model.
 def train_model(x_train, y_train):
-    # This line starts the try block
+    #  starts protected execution.
     try:
-        # This line logs the start of model training
-        logger.info("Model training started")
+        #  logs the training start.
+        logger.info("Model training started.")
 
-        # This line creates a pipeline with scaling and logistic regression
+        #  creates a pipeline with scaling and logistic regression.
         model = Pipeline(
             steps=[
                 ("scaler", MinMaxScaler()),
-                ("classifier", LogisticRegression(random_state=RANDOM_STATE, max_iter=1000))
+                ("classifier", LogisticRegression(random_state=RANDOM_STATE, max_iter=1000)),
             ]
         )
 
-        # This line trains the model on the training data
+        #  trains the pipeline on the training data.
         model.fit(x_train, y_train)
 
-        # This line logs that training has completed
-        logger.info("Model training completed successfully")
+        #  logs training success.
+        logger.info("Model training completed.")
 
-        # This line returns the trained model
+        #  returns the trained model.
         return model
 
-    # This block handles training errors
+    # This block handles training errors.
     except Exception as exc:
-        # This line logs the error
-        logger.error("Error occurred during model training")
+        #  logs the error.
+        logger.error("Model training failed.")
 
-        # This line raises a custom exception
+        #  raises a project specific exception.
         raise ProjectException(f"Failed to train model: {exc}")
 
-# This function saves the model and feature columns
+# This function saves the trained model and feature list.
 def save_artifacts(model, feature_columns):
-    # This line starts the try block
+    #  starts protected execution.
     try:
-        # This line creates the artifacts folder if it does not exist
+        #  creates the artifacts directory.
         os.makedirs(ARTIFACTS_DIR, exist_ok=True)
 
-        # This line opens the model file in write binary mode
+        #  opens the model file in binary write mode.
         with open(MODEL_FILE_PATH, "wb") as model_file:
-            # This line saves the trained model
+            #  saves the trained model.
             pickle.dump(model, model_file)
 
-        # This line opens the feature columns file in write binary mode
+        #  opens the feature list file in binary write mode.
         with open(FEATURE_COLUMNS_FILE_PATH, "wb") as feature_file:
-            # This line saves the feature columns
+            #  saves the feature column names.
             pickle.dump(feature_columns, feature_file)
 
-        # This line logs that artifacts were saved successfully
-        logger.info("Artifacts saved successfully")
+        #  logs successful artifact saving.
+        logger.info("Artifacts saved successfully.")
 
-    # This block handles save errors
+    # This block handles saving errors.
     except Exception as exc:
-        # This line logs the error
-        logger.error("Error occurred while saving artifacts")
+        #  logs the error.
+        logger.error("Saving artifacts failed.")
 
-        # This line raises a custom exception
+        #  raises a project specific exception.
         raise ProjectException(f"Failed to save artifacts: {exc}")

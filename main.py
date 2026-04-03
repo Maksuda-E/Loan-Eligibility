@@ -1,65 +1,65 @@
-# This line imports the dataset file path
+#  imports the dataset path from the configuration file.
 from src.config import DATA_FILE_PATH
 
-# This line imports the data loading function
+#  imports the data loading function.
 from src.data_loader import load_data
 
-# This line imports preprocessing functions
-from src.preprocess import clean_data, split_features_target, split_train_test
+#  imports preprocessing helper functions.
+from src.preprocessing import clean_data, split_features_target, split_train_test
 
-# This line imports training functions
+#  imports the model training and artifact saving functions.
 from src.train import train_model, save_artifacts
 
-# This line imports evaluation function
+#  imports the evaluation function.
 from src.evaluate import evaluate_model
 
-# This line imports the logger
+#  imports the logger generator.
 from src.logger import get_logger
 
-# This line creates a logger for this file
+#  creates a logger object for the current file.
 logger = get_logger(__name__)
 
-# This function controls the full training pipeline
+# This function runs the full training pipeline.
 def main():
-    # This line logs that the main pipeline has started
-    logger.info("Main pipeline started")
+    #  logs the start of the pipeline.
+    logger.info("Training pipeline started.")
 
-    # This line loads the raw dataset
+    #  loads the raw dataset.
     df = load_data(DATA_FILE_PATH)
 
-    # This line cleans and preprocesses the dataset
+    #  cleans and prepares the dataset.
     df_clean = clean_data(df)
 
-    # This line splits the cleaned data into features and target
+    #  separates features and target.
     x, y = split_features_target(df_clean)
 
-    # This line creates training and testing datasets
+    #  splits the dataset into train and test sets.
     x_train, x_test, y_train, y_test = split_train_test(x, y)
 
-    # This line trains the model
+    #  trains the model.
     model = train_model(x_train, y_train)
 
-    # This line saves the trained model and feature columns
+    #  saves the trained model and feature names.
     save_artifacts(model, list(x.columns))
 
-    # This line evaluates the trained model
+    #  evaluates the trained model on the test set.
     metrics = evaluate_model(model, x_test, y_test)
 
-    # This line prints a success message
-    print("Training completed successfully")
+    #  prints a success message to the terminal.
+    print("Training completed successfully.")
 
-    # This line prints each metric
-    print("Model evaluation results")
+    #  prints the evaluation heading.
+    print("Evaluation metrics:")
 
-    # This line starts a loop through each metric
+    #  loops through each metric.
     for key, value in metrics.items():
-        # This line prints the metric name and value
+        #  prints the metric name and metric value.
         print(f"{key}: {value}")
 
-    # This line logs that the main pipeline finished
-    logger.info("Main pipeline completed successfully")
+    #  logs the successful completion of the pipeline.
+    logger.info("Training pipeline completed.")
 
-# This line checks whether this file is being run directly
+#  checks whether the file is executed directly.
 if __name__ == "__main__":
-    # This line calls the main function
+    #  starts the main pipeline.
     main()
