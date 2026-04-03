@@ -1,48 +1,51 @@
-# This line imports Streamlit for building the web app.
+# This line imports Streamlit for UI.
 import streamlit as st
 
-# This line imports the prediction function from your pipeline.
+# This line imports prediction function.
 from src.predict import predict_loan_status
 
 
-# This line sets basic page configuration such as title and layout.
+# This line sets page configuration.
 st.set_page_config(page_title="Loan Eligibility", layout="wide")
 
 
-# This block injects custom CSS to improve UI appearance.
+# This block adds custom CSS styling.
 st.markdown(
     """
     <style>
 
-        /* REMOVE STREAMLIT HEADER */
+        /* REMOVE HEADER */
         header {visibility: hidden;}
 
-        /* REMOVE TOP WHITE SPACE */
+        /* REMOVE TOP SPACE */
         .block-container {
             padding-top: 1rem !important;
         }
 
-        .stApp > div:first-child {
-            padding-top: 0rem;
+        .stApp {
+            background-color: #eef7f1;
         }
 
-        /* BACKGROUND COLOR */
-        .stApp {
-            background-color: #f5f7fa;
+        /* HEADER BANNER */
+        .header-box {
+            background-color: #166534;
+            padding: 25px;
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 20px;
         }
 
         /* CARD STYLE */
         .card {
             background-color: white;
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
         }
 
         /* BUTTON STYLE */
         div.stButton > button {
-            background-color: #2563eb;
+            background-color: #16a34a;
             color: white;
             border-radius: 8px;
             height: 45px;
@@ -53,24 +56,24 @@ st.markdown(
         }
 
         div.stButton > button:hover {
-            background-color: #1d4ed8;
+            background-color: #15803d;
             color: white;
         }
 
         /* RESULT BOX */
         .approved {
-            background-color: #e6f9f0;
+            background-color: #dcfce7;
+            color: #166534;
             padding: 15px;
             border-radius: 8px;
-            color: #065f46;
             font-weight: bold;
         }
 
         .rejected {
-            background-color: #fdecea;
+            background-color: #fee2e2;
+            color: #991b1b;
             padding: 15px;
             border-radius: 8px;
-            color: #991b1b;
             font-weight: bold;
         }
 
@@ -80,98 +83,95 @@ st.markdown(
 )
 
 
-# This line displays the app title.
-st.title("Loan Eligibility Prediction")
+# HEADER SECTION
+st.markdown(
+    """
+    <div class="header-box">
+        <h2>Loan Eligibility Prediction</h2>
+        <p>Predict loan approval using trained machine learning model</p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-# This line displays a short description.
-st.write("Enter applicant details to check loan approval status.")
+
+# MAIN LAYOUT
+col1, col2 = st.columns([3, 1])
 
 
-# This creates two columns for layout.
-col1, col2 = st.columns(2)
-
-
-# LEFT SIDE INPUT FORM
+# LEFT SIDE FORM
 with col1:
-
-    # This opens a styled container.
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    # This creates input fields for user data.
-    gender = st.selectbox("Gender", ["Male", "Female"])
-    married = st.selectbox("Married", ["Yes", "No"])
-    dependents = st.selectbox("Dependents", ["0", "1", "2", "3+"])
-    education = st.selectbox("Education", ["Graduate", "Not Graduate"])
-    self_employed = st.selectbox("Self Employed", ["No", "Yes"])
-    property_area = st.selectbox("Property Area", ["Urban", "Semiurban", "Rural"])
+    st.subheader("Enter Applicant Details")
 
-    applicant_income = st.number_input("Applicant Income", min_value=0.0, value=5000.0)
-    coapplicant_income = st.number_input("Coapplicant Income", min_value=0.0, value=0.0)
+    colA, colB = st.columns(2)
 
-    loan_amount = st.number_input("Loan Amount", min_value=0.0, value=128.0)
-    loan_term = st.number_input("Loan Term (months)", min_value=0.0, value=360.0)
+    with colA:
+        gender = st.selectbox("Gender", ["Male", "Female"])
+        married = st.selectbox("Married", ["Yes", "No"])
+        dependents = st.selectbox("Dependents", ["0", "1", "2", "3+"])
+        education = st.selectbox("Education", ["Graduate", "Not Graduate"])
+        self_employed = st.selectbox("Self Employed", ["No", "Yes"])
 
-    credit_history = st.selectbox("Credit History", [1.0, 0.0])
+    with colB:
+        property_area = st.selectbox("Property Area", ["Urban", "Semiurban", "Rural"])
+        applicant_income = st.number_input("Applicant Income", value=5000.0)
+        coapplicant_income = st.number_input("Coapplicant Income", value=0.0)
+        loan_amount = st.number_input("Loan Amount", value=128.0)
+        loan_term = st.number_input("Loan Term (months)", value=360.0)
+        credit_history = st.selectbox("Credit History", [1.0, 0.0])
 
-    # This creates the prediction button.
+    # BUTTON
     predict_btn = st.button("Predict Loan Status")
 
-    # This closes the styled container.
     st.markdown('</div>', unsafe_allow_html=True)
 
 
-# RIGHT SIDE RESULT PANEL
+# RIGHT SIDE INFO PANEL
 with col2:
-
-    # This opens a styled container.
     st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    # This shows summary info.
-    st.subheader("Application Summary")
+    st.subheader("Model Information")
 
-    total_income = applicant_income + coapplicant_income
+    st.info("Model Used: Logistic Regression")
 
-    st.write(f"Total Income: {total_income}")
-    st.write(f"Loan Amount: {loan_amount}")
-    st.write(f"Loan Term: {loan_term} months")
+    st.write("Accuracy: ~80%")
+    st.write("Based on cleaned dataset and preprocessing pipeline")
 
-    # This checks if prediction button was clicked.
-    if predict_btn:
-
-        # This creates a dictionary of user inputs.
-        user_data = {
-            "Gender": gender,
-            "Married": married,
-            "Dependents": dependents,
-            "Education": education,
-            "Self_Employed": self_employed,
-            "ApplicantIncome": applicant_income,
-            "CoapplicantIncome": coapplicant_income,
-            "LoanAmount": loan_amount,
-            "Loan_Amount_Term": loan_term,
-            "Credit_History": credit_history,
-            "Property_Area": property_area,
-        }
-
-        try:
-            # This calls the prediction function.
-            result = predict_loan_status(user_data)
-
-            # This displays result based on prediction.
-            if result == "Approved":
-                st.markdown(
-                    '<div class="approved">Loan Approved</div>',
-                    unsafe_allow_html=True
-                )
-            else:
-                st.markdown(
-                    '<div class="rejected">Loan Not Approved</div>',
-                    unsafe_allow_html=True
-                )
-
-        except Exception as e:
-            # This shows error if prediction fails.
-            st.error(f"Error: {e}")
-
-    # This closes the styled container.
     st.markdown('</div>', unsafe_allow_html=True)
+
+
+# PREDICTION LOGIC
+if predict_btn:
+
+    user_data = {
+        "Gender": gender,
+        "Married": married,
+        "Dependents": dependents,
+        "Education": education,
+        "Self_Employed": self_employed,
+        "ApplicantIncome": applicant_income,
+        "CoapplicantIncome": coapplicant_income,
+        "LoanAmount": loan_amount,
+        "Loan_Amount_Term": loan_term,
+        "Credit_History": credit_history,
+        "Property_Area": property_area,
+    }
+
+    try:
+        result = predict_loan_status(user_data)
+
+        if result == "Approved":
+            st.markdown(
+                '<div class="approved">Loan Approved</div>',
+                unsafe_allow_html=True
+            )
+        else:
+            st.markdown(
+                '<div class="rejected">Loan Not Approved</div>',
+                unsafe_allow_html=True
+            )
+
+    except Exception as e:
+        st.error(f"Error: {e}")
