@@ -1,16 +1,16 @@
-# This line imports streamlit for the web app
+#  imports streamlit for the web app
 import streamlit as st
 
-# This line imports the prediction function
+#  imports the prediction function
 from src.predict import predict_loan_status
 
-# This line sets the page title and layout
+#  sets the page title and layout
 st.set_page_config(
     page_title="Loan Eligibility Prediction",
     layout="wide"
 )
 
-# This line adds custom CSS for a new layout and color theme
+#  adds custom CSS for a new layout and color theme
 st.markdown(
     """
     <style>
@@ -46,7 +46,7 @@ st.markdown(
         border-radius: 20px;
         padding: 22px;
         box-shadow: 0 12px 30px rgba(37, 99, 235, 0.22);
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.2rem;
     }
 
     .info-card-title {
@@ -57,8 +57,8 @@ st.markdown(
 
     .info-card-text {
         font-size: 0.98rem;
-        line-height: 1.6;
-        opacity: 0.95;
+        line-height: 1.8;
+        opacity: 0.96;
     }
 
     .result-card-approved {
@@ -105,46 +105,39 @@ st.markdown(
     div.stButton > button:hover {
         background: linear-gradient(90deg, #4338ca, #1d4ed8);
     }
-
-    [data-testid="stMetric"] {
-        background: rgba(255, 255, 255, 0.75);
-        border: 1px solid rgba(191, 219, 254, 0.8);
-        border-radius: 16px;
-        padding: 10px;
-    }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# This line displays the main title
+#  displays the main title
 st.markdown(
     '<div class="main-title">Loan Eligibility Prediction App</div>',
     unsafe_allow_html=True
 )
 
-# This line displays the subtitle
+#  displays the subtitle
 st.markdown(
     '<div class="sub-title">Enter applicant details to predict loan approval status</div>',
     unsafe_allow_html=True
 )
 
-# This line creates three columns to center the main content
+#  creates three columns to center the main content
 left_space, center_col, right_space = st.columns([0.6, 3, 0.6])
 
 # This block places the full layout inside the center column
 with center_col:
 
-    # This line creates two columns for a different layout style
+    #  creates two columns for the main layout
     form_col, side_col = st.columns([2.2, 1], gap="large")
 
     # This block creates the left form section
     with form_col:
 
-        # This line shows the form section heading
+        #  shows the form section heading
         st.markdown('<div class="section-title">Applicant Details</div>', unsafe_allow_html=True)
 
-        # This line creates the first row of inputs
+        #  creates the first row of inputs
         row1_col1, row1_col2, row1_col3 = st.columns(3)
 
         # This block creates the gender input
@@ -159,7 +152,7 @@ with center_col:
         with row1_col3:
             dependents = st.selectbox("Dependents", ["0", "1", "2", "3+"])
 
-        # This line creates the second row of inputs
+        #  creates the second row of inputs
         row2_col1, row2_col2, row2_col3 = st.columns(3)
 
         # This block creates the education input
@@ -174,7 +167,7 @@ with center_col:
         with row2_col3:
             property_area = st.selectbox("Property Area", ["Urban", "Semiurban", "Rural"])
 
-        # This line creates the third row of numeric inputs
+        #  creates the third row of numeric inputs
         row3_col1, row3_col2 = st.columns(2)
 
         # This block creates the applicant income input
@@ -193,7 +186,7 @@ with center_col:
                 value=0.0
             )
 
-        # This line creates the fourth row of numeric inputs
+        #  creates the fourth row of numeric inputs
         row4_col1, row4_col2, row4_col3 = st.columns(3)
 
         # This block creates the loan amount input
@@ -216,33 +209,71 @@ with center_col:
         with row4_col3:
             credit_history = st.selectbox("Credit History", [1.0, 0.0])
 
-        # This line adds small space before the button
+        #  adds small space before the button
         st.markdown("<br>", unsafe_allow_html=True)
 
-        # This line creates the prediction button
+        #  creates the prediction button
         predict_button = st.button("Predict Loan Status")
 
-    # This block creates the right side information panel
+    # This block creates the right side overview and result section
     with side_col:
 
-        # This line shows an information card
+        #  shows the overview card
         st.markdown(
-            """
+            f"""
             <div class="info-card">
                 <div class="info-card-title">Quick Overview</div>
                 <div class="info-card-text">
-                    Fill in the applicant profile to estimate whether the loan is likely to be approved.
-                    Strong income, stable credit history, and balanced loan details usually improve approval chances.
+                    Applicant Income: {applicant_income:.0f}<br>
+                    Loan Amount: {loan_amount:.0f}<br>
+                    Loan Term: {loan_amount_term:.0f}<br>
+                    Credit History: {credit_history}
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
 
-    # This line checks whether the prediction button has been clicked
+        #  checks whether a prediction result exists in session state
+        if "loan_result" in st.session_state:
+
+            #  gets the stored prediction result
+            result = st.session_state["loan_result"]
+
+            #  converts the result to lowercase text
+            result_text = str(result).strip().lower()
+
+            #  checks if the result indicates approval
+            if "approve" in result_text or result_text in ["1", "y", "yes", "eligible", "approved"]:
+
+                #  shows the approved result card under the overview
+                st.markdown(
+                    f"""
+                    <div class="result-card-approved">
+                        <div class="result-title">Prediction Result</div>
+                        <div class="result-value">{result}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+            # This block handles rejected or other results
+            else:
+                #  shows the rejected result card under the overview
+                st.markdown(
+                    f"""
+                    <div class="result-card-rejected">
+                        <div class="result-title">Prediction Result</div>
+                        <div class="result-value">{result}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+    #  checks whether the prediction button has been clicked
     if predict_button:
 
-        # This line creates a dictionary of user input
+        #  creates a dictionary of user input
         user_input = {
             "Gender": gender,
             "Married": married,
@@ -257,42 +288,18 @@ with center_col:
             "Property_Area": property_area
         }
 
-        # This line starts a try block for safe prediction
+        #  starts a try block for safe prediction
         try:
-            # This line gets the prediction result
+            #  gets the prediction result
             result = predict_loan_status(user_input)
 
-            # This line converts the result to text for checking approval status
-            result_text = str(result).strip().lower()
+            #  stores the result in session state so it appears under the overview
+            st.session_state["loan_result"] = result
 
-            # This line checks if the result suggests approval
-            if "approve" in result_text or result_text in ["1", "y", "yes", "eligible", "approved"]:
-
-                # This line shows an approved result card
-                st.markdown(
-                    f"""
-                    <div class="result-card-approved">
-                        <div class="result-title">Prediction Result</div>
-                        <div class="result-value">{result}</div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-            # This block handles non approved results
-            else:
-                # This line shows a rejected result card
-                st.markdown(
-                    f"""
-                    <div class="result-card-rejected">
-                        <div class="result-title">Prediction Result</div>
-                        <div class="result-value">{result}</div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+            #  reruns the app so the result card is shown immediately
+            st.rerun()
 
         # This block shows error messages in the app
         except Exception as exc:
-            # This line displays the error
+            #  displays the error
             st.error(f"Prediction failed: {exc}")
