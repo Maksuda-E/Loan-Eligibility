@@ -33,17 +33,29 @@ based on applicant details such as income, credit history, and property informat
 The dataset contains the following features:
 
 Loan_ID: Unique applicant ID
+
 Gender: Male/Female
+
 Married: Yes/No
+
 Dependents: Number of dependents
+
 Education: Graduate/Not Graduate
+
 Self_Employed: Yes/No
+
 ApplicantIncome: Applicant’s monthly income
+
 CoapplicantIncome: Co-applicant’s income
+
 LoanAmount: Loan amount requested
+
 Loan_Amount_Term: Loan repayment term
+
 Credit_History: Credit history (1 or 0)
+
 Property_Area: Urban/Semiurban/Rural
+
 Loan_Approved: Target variable (Y/N)
 
 Dataset file:
@@ -51,18 +63,28 @@ data/credit.csv
 
 # Model Workflow
 Load dataset
+
 Handle missing values:
+
 Categorical → Mode
+
 Numerical → Median
+
 Drop unnecessary column:
+
 Loan_ID
+
 Convert target variable:
 Y → 1
 N → 0
+
 Apply one-hot encoding for categorical variables
+
 Split data into train and test sets
+
 Scale features using MinMaxScaler
-Train models:
+
+# Train models:
 Logistic Regression
 Decision Tree
 Random Forest
