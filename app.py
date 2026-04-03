@@ -1,267 +1,247 @@
-#  imports Streamlit for building the web app interface.
+# This line imports Streamlit for building the web application.
 import streamlit as st
 
-#  imports the prediction function from the project pipeline.
+# This line imports the loan prediction function from the project module.
 from src.predict import predict_loan_status
 
 
-#  sets the page configuration for the Streamlit app.
-st.set_page_config(
-    page_title="Loan Eligibility",
-    layout="wide",
-)
+# This line sets the page configuration for the app.
+st.set_page_config(page_title="Loan Eligibility Prediction", layout="wide")
 
 
-# This block adds custom CSS styling to remove Streamlit spacing and improve the UI.
+# This block injects custom CSS for styling the application.
 st.markdown(
     """
     <style>
-/* REMOVE HEADER */
-        header {visibility: hidden;}
+    /* REMOVE HEADER */
+    header {visibility: hidden;}
 
-        /* REMOVE TOP SPACE */
-        .block-container {
-            padding-top: 1rem !important;
-        }
-        
-        footer {
-            visibility: hidden;
-        }
+    /* REMOVE TOP SPACE */
+    .block-container {
+        padding-top: 1rem !important;
+    }
 
-        div[data-testid="stToolbar"] {
-            display: none;
-        }
+    /* APP BACKGROUND */
+    .stApp {
+        background-color: #F0FDF4;
+    }
 
-        div[data-testid="stDecoration"] {
-            display: none;
-        }
+    /* Titles */
+    h1 {
+        color: #166534;
+        font-weight: 700;
+    }
 
-        div[data-testid="stStatusWidget"] {
-            display: none;
-        }
+    h2, h3 {
+        color: #14532d;
+        font-weight: 600;
+    }
 
-        div[data-testid="stHeader"] {
-            display: none;
-        }
+    p, label {
+        color: #374151;
+    }
 
-        /* REMOVE EXTRA TOP SPACE */
-        .block-container {
-            padding-top: 0.4rem !important;
-            padding-bottom: 1rem !important;
-        }
+    /* Input fields */
+    div[data-baseweb="input"] > div,
+    div[data-baseweb="select"] > div {
+        background-color: #f0fdf4;
+        border-radius: 8px;
+        border: 1px solid #bbf7d0;
+    }
 
-        section.main > div {
-            padding-top: 0rem !important;
-        }
+    /* Metrics */
+    div[data-testid="stMetric"] {
+        background: white;
+        border-radius: 12px;
+        padding: 16px;
+        border: 1px solid #dcfce7;
+    }
 
-        .stApp {
-            background-color: #FAFAF5;
-            margin-top: -2.8rem;
-        }
+    /* Info box */
+    div[data-testid="stInfo"] {
+        background: #dcfce7;
+        color: #166534;
+        border-radius: 10px;
+        border: 1px solid #86efac;
+    }
 
-        /* REMOVE EMPTY GAP AFTER HEADER */
-        div[data-testid="stHorizontalBlock"] {
-            margin-top: 0rem !important;
-            padding-top: 0rem !important;
-            gap: 1rem;
-        }
+    /* Normal button */
+    div.stButton > button {
+        background-color: #16a34a;
+        color: white;
+        border-radius: 8px;
+        padding: 10px;
+        font-weight: 600;
+        border: none;
+        width: 100%;
+        height: 46px;
+    }
 
-        div[data-testid="element-container"]:empty {
-            display: none !important;
-        }
+    div.stButton > button:hover {
+        background-color: #15803d;
+        color: white;
+    }
 
-        /* HEADER BANNER */
-        .header-box {
-            background-color: #166534;
-            padding: 24px 28px;
-            border-radius: 14px;
-            color: white;
-            margin-bottom: 1rem;
-        }
+    /* Divider */
+    hr {
+        border: none;
+        height: 1px;
+        background: #dcfce7;
+    }
 
-        .header-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin: 0;
-        }
+    /* Result boxes */
+    .approved-box {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #86efac;
+        border-radius: 12px;
+        padding: 16px;
+        font-weight: 700;
+        margin-top: 16px;
+    }
 
-        .header-subtitle {
-            font-size: 1rem;
-            margin-top: 0.35rem;
-            margin-bottom: 0;
-            opacity: 0.95;
-        }
+    .rejected-box {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+        border-radius: 12px;
+        padding: 16px;
+        font-weight: 700;
+        margin-top: 16px;
+    }
 
-        /* CARD STYLE */
-        .card {
-            background-color: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.06);
-            border: 1px solid #e5e7eb;
-        }
-
-        /* BUTTON STYLE */
-        div.stButton > button {
-            background-color: #16a34a;
-            color: white;
-            border-radius: 10px;
-            height: 46px;
-            font-size: 16px;
-            font-weight: 600;
-            border: none;
-            width: 100%;
-        }
-
-        div.stButton > button:hover {
-            background-color: #15803d;
-            color: white;
-        }
-
-        /* RESULT BOX */
-        .approved {
-            background-color: #dcfce7;
-            color: #166534;
-            padding: 15px;
-            border-radius: 10px;
-            font-weight: 700;
-            border: 1px solid #86efac;
-        }
-
-        .rejected {
-            background-color: #fee2e2;
-            color: #991b1b;
-            padding: 15px;
-            border-radius: 10px;
-            font-weight: 700;
-            border: 1px solid #fca5a5;
-        }
-
+    /* White card using Streamlit container wrapper */
+    .custom-card {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid #dcfce7;
+        margin-bottom: 20px;
+    }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
 
-#  creates the top green header section.
+# This line displays the styled hero header section.
 st.markdown(
     """
-    <div class="header-box">
-        <p class="header-title">Loan Eligibility Prediction</p>
-        <p class="header-subtitle">Predict loan approval using the trained machine learning model.</p>
+    <div style="
+        background: #166534;
+        padding: 32px;
+        border-radius: 20px;
+        margin-bottom: 24px;
+        box-shadow: 0 18px 36px rgba(22, 101, 52, 0.20);
+    ">
+        <h1 style="color: white; margin: 0; font-size: 2.6rem; font-weight: 800;">
+            Loan Eligibility Prediction
+        </h1>
+        <p style="color: #dcfce7; margin-top: 12px; font-size: 1.1rem;">
+            Predict loan approval using the trained machine learning model.
+        </p>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
 
-#  creates a main container so the content starts immediately after the header.
-main_container = st.container()
+# This line creates the main two-column dashboard layout.
+left_col, right_col = st.columns([3, 1])
 
 
-# This block places the full page content inside the main container.
-with main_container:
-    #  creates the two-column dashboard layout.
-    col1, col2 = st.columns([3, 1])
+# This block builds the left section of the page.
+with left_col:
+    # This line displays the section title.
+    st.subheader("Enter Applicant Details")
 
-    # This block creates the left side input form section.
-    with col1:
-        #  opens a styled form card.
-        st.markdown('<div class="card">', unsafe_allow_html=True)
+    # This line creates two columns for form input arrangement.
+    form_col1, form_col2 = st.columns(2)
 
-        #  shows the section title.
-        st.subheader("Enter Applicant Details")
+    # This block contains the first group of user inputs.
+    with form_col1:
+        # This line creates a dropdown for gender.
+        gender = st.selectbox("Gender", ["Male", "Female"])
 
-        #  creates two inner columns for arranging inputs.
-        col_a, col_b = st.columns(2)
+        # This line creates a dropdown for marital status.
+        married = st.selectbox("Married", ["Yes", "No"])
 
-        # This block holds the first group of input fields.
-        with col_a:
-            #  creates the gender input.
-            gender = st.selectbox("Gender", ["Male", "Female"])
+        # This line creates a dropdown for number of dependents.
+        dependents = st.selectbox("Dependents", ["0", "1", "2", "3+"])
 
-            #  creates the married input.
-            married = st.selectbox("Married", ["Yes", "No"])
+        # This line creates a dropdown for education level.
+        education = st.selectbox("Education", ["Graduate", "Not Graduate"])
 
-            #  creates the dependents input.
-            dependents = st.selectbox("Dependents", ["0", "1", "2", "3+"])
+        # This line creates a dropdown for self-employment status.
+        self_employed = st.selectbox("Self Employed", ["No", "Yes"])
 
-            #  creates the education input.
-            education = st.selectbox("Education", ["Graduate", "Not Graduate"])
+    # This block contains the second group of user inputs.
+    with form_col2:
+        # This line creates a dropdown for property area.
+        property_area = st.selectbox("Property Area", ["Urban", "Semiurban", "Rural"])
 
-            #  creates the self-employed input.
-            self_employed = st.selectbox("Self Employed", ["No", "Yes"])
+        # This line creates a numeric input for applicant income.
+        applicant_income = st.number_input(
+            "Applicant Income",
+            min_value=0.0,
+            value=5000.0,
+            step=100.0,
+        )
 
-        # This block holds the second group of input fields.
-        with col_b:
-            #  creates the property area input.
-            property_area = st.selectbox("Property Area", ["Urban", "Semiurban", "Rural"])
+        # This line creates a numeric input for coapplicant income.
+        coapplicant_income = st.number_input(
+            "Coapplicant Income",
+            min_value=0.0,
+            value=0.0,
+            step=100.0,
+        )
 
-            #  creates the applicant income input.
-            applicant_income = st.number_input(
-                "Applicant Income",
-                min_value=0.0,
-                value=5000.0,
-                step=100.0,
-            )
+        # This line creates a numeric input for loan amount.
+        loan_amount = st.number_input(
+            "Loan Amount",
+            min_value=0.0,
+            value=128.0,
+            step=1.0,
+        )
 
-            #  creates the coapplicant income input.
-            coapplicant_income = st.number_input(
-                "Coapplicant Income",
-                min_value=0.0,
-                value=0.0,
-                step=100.0,
-            )
+        # This line creates a numeric input for loan term.
+        loan_term = st.number_input(
+            "Loan Term (months)",
+            min_value=0.0,
+            value=360.0,
+            step=12.0,
+        )
 
-            #  creates the loan amount input.
-            loan_amount = st.number_input(
-                "Loan Amount",
-                min_value=0.0,
-                value=128.0,
-                step=1.0,
-            )
+        # This line creates a dropdown for credit history.
+        credit_history = st.selectbox("Credit History", [1.0, 0.0])
 
-            #  creates the loan term input.
-            loan_term = st.number_input(
-                "Loan Term (months)",
-                min_value=0.0,
-                value=360.0,
-                step=12.0,
-            )
-
-            #  creates the credit history input.
-            credit_history = st.selectbox("Credit History", [1.0, 0.0])
-
-        #  creates the prediction button.
-        predict_btn = st.button("Predict Loan Status")
-
-        #  closes the styled form card.
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    # This block creates the right side model information section.
-    with col2:
-        #  opens a styled information card.
-        st.markdown('<div class="card">', unsafe_allow_html=True)
-
-        #  shows the side panel title.
-        st.subheader("Model Information")
-
-        #  displays the model name.
-        st.info("Model Used: Logistic Regression")
-
-        #  displays the approximate model accuracy.
-        st.write("Accuracy: ~80%")
-
-        #  displays a short note about preprocessing.
-        st.write("Based on cleaned dataset and preprocessing pipeline")
-
-        #  closes the styled information card.
-        st.markdown("</div>", unsafe_allow_html=True)
+    # This line creates a full-width prediction button.
+    predict_btn = st.button("Predict Loan Status")
 
 
-# This block runs the prediction only after the user clicks the button.
+# This block builds the right section of the page.
+with right_col:
+    # This line displays the section title.
+    st.subheader("Model Information")
+
+    # This line displays model information in an info box.
+    st.info("Model Used: Logistic Regression")
+
+    # This line displays the model accuracy.
+    st.write("Accuracy: ~80%")
+
+    # This line displays a short note about the training pipeline.
+    st.write("Based on cleaned dataset and preprocessing pipeline")
+
+    # This line shows a few useful summary metrics.
+    st.metric("Applicant Income", f"{applicant_income:,.0f}")
+    st.metric("Loan Amount", f"{loan_amount:,.0f}")
+    st.metric("Loan Term", f"{loan_term:,.0f} months")
+
+
+# This block runs when the user clicks the prediction button.
 if predict_btn:
-    #  creates the input dictionary expected by the prediction function.
+    # This line prepares the user input dictionary for the prediction function.
     user_data = {
         "Gender": gender,
         "Married": married,
@@ -276,28 +256,31 @@ if predict_btn:
         "Property_Area": property_area,
     }
 
-    # This block handles prediction and error checking safely.
+    # This block safely handles prediction.
     try:
-        #  gets the prediction result from the saved model.
+        # This line gets the loan eligibility result from the trained model.
         result = predict_loan_status(user_data)
 
-        #  adds a small gap before the result.
-        st.write("")
+        # This line adds a visual divider before showing the result.
+        st.markdown("<hr>", unsafe_allow_html=True)
 
-        # This block shows the approved result style.
+        # This line shows a heading for the result section.
+        st.subheader("Prediction Result")
+
+        # This block displays the approved message.
         if result == "Approved":
             st.markdown(
-                '<div class="approved">Loan Approved</div>',
+                '<div class="approved-box">Loan Approved</div>',
                 unsafe_allow_html=True,
             )
 
-        # This block shows the not approved result style.
+        # This block displays the rejected message.
         else:
             st.markdown(
-                '<div class="rejected">Loan Not Approved</div>',
+                '<div class="rejected-box">Loan Not Approved</div>',
                 unsafe_allow_html=True,
             )
 
-    # This block displays any error message.
+    # This block displays any error that occurs during prediction.
     except Exception as e:
         st.error(f"Error: {e}")
