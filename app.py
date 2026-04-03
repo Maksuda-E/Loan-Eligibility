@@ -224,10 +224,10 @@ with center_col:
             <div class="info-card">
                 <div class="info-card-title">Quick Overview</div>
                 <div class="info-card-text">
-                    Applicant Income: {applicant_income:.0f}<br>
-                    Loan Amount: {loan_amount:.0f}<br>
-                    Loan Term: {loan_amount_term:.0f}<br>
-                    Credit History: {credit_history}
+                    The applicant has an income of {applicant_income:.0f} and is applying for a loan amount of {loan_amount:.0f} 
+                    with a repayment period of {loan_amount_term:.0f} months. The credit history is marked as 
+                    {"good" if credit_history == 1.0 else "not good"}, which plays a key role in determining loan approval. 
+                     These details together help the model evaluate whether the loan is likely to be approved.
                 </div>
             </div>
             """,
