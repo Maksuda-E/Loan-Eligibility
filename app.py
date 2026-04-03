@@ -23,7 +23,7 @@ st.markdown(
         }
 
         .stApp {
-            background-color: #eef7f1;
+            background-color: #FAFAF5;
         }
 
         /* HEADER BANNER */
