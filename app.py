@@ -14,16 +14,51 @@ st.markdown(
     """
     <style>
 
-        /* REMOVE HEADER */
-        header {visibility: hidden;}
+        /* HIDE STREAMLIT DEFAULT HEADER ELEMENTS */
+        header {
+            visibility: hidden;
+            height: 0rem;
+        }
+
+        #MainMenu {
+            visibility: hidden;
+        }
+
+        footer {
+            visibility: hidden;
+        }
+
+        div[data-testid="stToolbar"] {
+            display: none;
+        }
+
+        div[data-testid="stDecoration"] {
+            display: none;
+        }
+
+        div[data-testid="stStatusWidget"] {
+            display: none;
+        }
+
+        div[data-testid="stHeader"] {
+            display: none;
+        }
 
         /* REMOVE TOP SPACE */
         .block-container {
-            padding-top: 1rem !important;
+            padding-top: 0.2rem !important;
+            padding-bottom: 1rem !important;
         }
 
+        /* PULL APP UPWARD */
         .stApp {
             background-color: #FAFAF5;
+            margin-top: -3.5rem;
+        }
+
+        /* REMOVE EXTRA WRAPPER SPACING */
+        section.main > div {
+            padding-top: 0rem !important;
         }
 
         /* HEADER BANNER */
