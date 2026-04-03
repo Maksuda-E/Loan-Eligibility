@@ -1,36 +1,45 @@
 #  imports streamlit for the web app
 import streamlit as st
 
-#  imports the prediction function
+#  imports the prediction function from your project
 from src.predict import predict_loan_status
 
-#  sets the page title and layout
+#  sets the page configuration
 st.set_page_config(
     page_title="Loan Eligibility Prediction",
     layout="wide"
 )
 
-#  adds custom CSS for a new layout and color theme
+#  adds custom CSS styling for the app design
 st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(135deg, #eff6ff, #f8fafc, #eef2ff);
+        background: linear-gradient(135deg, #f8fafc, #eff6ff, #f5f3ff);
     }
 
     .main-title {
-        font-size: 2.8rem;
+        font-size: 2.7rem;
         font-weight: 800;
         text-align: center;
         color: #1e1b4b;
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.2rem;
     }
 
     .sub-title {
         font-size: 1.05rem;
         text-align: center;
         color: #475569;
-        margin-bottom: 2.2rem;
+        margin-bottom: 2rem;
+    }
+
+    .glass-box {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        backdrop-filter: blur(12px);
+        border-radius: 22px;
+        padding: 24px;
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
     }
 
     .section-title {
@@ -40,28 +49,28 @@ st.markdown(
         margin-bottom: 1rem;
     }
 
-    .info-card {
-        background: linear-gradient(135deg, #312e81, #2563eb);
+    .overview-card {
+        background: linear-gradient(135deg, #0f766e, #2563eb);
         color: white;
         border-radius: 20px;
         padding: 22px;
-        box-shadow: 0 12px 30px rgba(37, 99, 235, 0.22);
-        margin-bottom: 1.2rem;
+        box-shadow: 0 12px 28px rgba(37, 99, 235, 0.22);
+        margin-bottom: 1rem;
     }
 
-    .info-card-title {
-        font-size: 1.3rem;
+    .overview-title {
+        font-size: 1.35rem;
         font-weight: 700;
-        margin-bottom: 0.7rem;
+        margin-bottom: 0.8rem;
     }
 
-    .info-card-text {
-        font-size: 0.98rem;
+    .overview-text {
+        font-size: 1rem;
         line-height: 1.8;
-        opacity: 0.96;
+        opacity: 0.97;
     }
 
-    .result-card-approved {
+    .approved-card {
         background: linear-gradient(135deg, #059669, #10b981);
         color: white;
         border-radius: 18px;
@@ -70,7 +79,7 @@ st.markdown(
         box-shadow: 0 10px 24px rgba(16, 185, 129, 0.22);
     }
 
-    .result-card-rejected {
+    .rejected-card {
         background: linear-gradient(135deg, #dc2626, #f97316);
         color: white;
         border-radius: 18px;
@@ -86,8 +95,14 @@ st.markdown(
     }
 
     .result-value {
-        font-size: 1.6rem;
+        font-size: 1.7rem;
         font-weight: 800;
+        margin-bottom: 0.35rem;
+    }
+
+    .result-text {
+        font-size: 1rem;
+        opacity: 0.96;
     }
 
     div.stButton > button {
@@ -95,46 +110,49 @@ st.markdown(
         height: 50px;
         border: none;
         border-radius: 14px;
-        background: linear-gradient(90deg, #4f46e5, #2563eb);
+        background: linear-gradient(90deg, #7c3aed, #2563eb);
         color: white;
         font-size: 1rem;
         font-weight: 700;
-        box-shadow: 0 10px 22px rgba(79, 70, 229, 0.22);
+        box-shadow: 0 10px 22px rgba(124, 58, 237, 0.22);
     }
 
     div.stButton > button:hover {
-        background: linear-gradient(90deg, #4338ca, #1d4ed8);
+        background: linear-gradient(90deg, #6d28d9, #1d4ed8);
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-#  displays the main title
+#  displays the app title
 st.markdown(
     '<div class="main-title">Loan Eligibility Prediction App</div>',
     unsafe_allow_html=True
 )
 
-#  displays the subtitle
+#  displays the app subtitle
 st.markdown(
     '<div class="sub-title">Enter applicant details to predict loan approval status</div>',
     unsafe_allow_html=True
 )
 
-#  creates three columns to center the main content
-left_space, center_col, right_space = st.columns([0.6, 3, 0.6])
+#  creates a centered page layout
+left_space, center_col, right_space = st.columns([0.5, 4, 0.5])
 
-# This block places the full layout inside the center column
+# This block contains the full app content
 with center_col:
 
-    #  creates two columns for the main layout
+    #  creates two columns for form and side panel
     form_col, side_col = st.columns([2.2, 1], gap="large")
 
-    # This block creates the left form section
+    # This block creates the form section
     with form_col:
 
-        #  shows the form section heading
+        #  opens a styled form container
+        st.markdown('<div class="glass-box">', unsafe_allow_html=True)
+
+        #  displays the section title
         st.markdown('<div class="section-title">Applicant Details</div>', unsafe_allow_html=True)
 
         #  creates the first row of inputs
@@ -144,7 +162,7 @@ with center_col:
         with row1_col1:
             gender = st.selectbox("Gender", ["Male", "Female"])
 
-        # This block creates the marital status input
+        # This block creates the married input
         with row1_col2:
             married = st.selectbox("Married", ["Yes", "No"])
 
@@ -209,71 +227,82 @@ with center_col:
         with row4_col3:
             credit_history = st.selectbox("Credit History", [1.0, 0.0])
 
-        #  adds small space before the button
+        #  adds small spacing before the button
         st.markdown("<br>", unsafe_allow_html=True)
 
         #  creates the prediction button
         predict_button = st.button("Predict Loan Status")
 
-    # This block creates the right side overview and result section
+        #  closes the styled form container
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # This block creates the side panel
     with side_col:
 
-        #  shows the overview card
+        #  displays the overview card
         st.markdown(
             f"""
-            <div class="info-card">
-                <div class="info-card-title">Quick Overview</div>
-                <div class="info-card-text">
-                    The applicant has an income of {applicant_income:.0f} and is applying for a loan amount of {loan_amount:.0f} 
-                    with a repayment period of {loan_amount_term:.0f} months. The credit history is marked as 
-                    {"good" if credit_history == 1.0 else "not good"}, which plays a key role in determining loan approval. 
-                     These details together help the model evaluate whether the loan is likely to be approved.
+            <div class="overview-card">
+                <div class="overview-title">Application Overview</div>
+                <div class="overview-text">
+                    This applicant profile shows a monthly income of {applicant_income:.0f} with a coapplicant contribution of {coapplicant_income:.0f}. 
+                    The requested loan amount is {loan_amount:.0f} for a repayment term of {loan_amount_term:.0f} months. 
+                    The application also reflects {dependents} dependents, {education.lower()} education status, 
+                    self employment marked as {self_employed.lower()}, and a credit history value of {credit_history}. 
+                    These are the same input details the trained model will use to estimate loan approval.
                 </div>
             </div>
             """,
             unsafe_allow_html=True
         )
 
-        #  checks whether a prediction result exists in session state
+        #  checks whether a previous prediction result exists
         if "loan_result" in st.session_state:
 
-            #  gets the stored prediction result
+            #  reads the stored result
             result = st.session_state["loan_result"]
 
-            #  converts the result to lowercase text
+            #  converts the result into lowercase text for checking
             result_text = str(result).strip().lower()
 
-            #  checks if the result indicates approval
+            #  checks if the result means approval
             if "approve" in result_text or result_text in ["1", "y", "yes", "eligible", "approved"]:
 
-                #  shows the approved result card under the overview
+                #  displays the approved result card
                 st.markdown(
                     f"""
-                    <div class="result-card-approved">
+                    <div class="approved-card">
                         <div class="result-title">Prediction Result</div>
                         <div class="result-value">{result}</div>
+                        <div class="result-text">
+                            The application appears eligible based on the trained model logic.
+                        </div>
                     </div>
                     """,
                     unsafe_allow_html=True
                 )
 
-            # This block handles rejected or other results
+            # This block handles non approved results
             else:
-                #  shows the rejected result card under the overview
+
+                #  displays the rejected result card
                 st.markdown(
                     f"""
-                    <div class="result-card-rejected">
+                    <div class="rejected-card">
                         <div class="result-title">Prediction Result</div>
                         <div class="result-value">{result}</div>
+                        <div class="result-text">
+                            The application appears risky based on the trained model logic.
+                        </div>
                     </div>
                     """,
                     unsafe_allow_html=True
                 )
 
-    #  checks whether the prediction button has been clicked
+    #  checks if the button was clicked
     if predict_button:
 
-        #  creates a dictionary of user input
+        #  creates the user input dictionary
         user_input = {
             "Gender": gender,
             "Married": married,
@@ -288,18 +317,17 @@ with center_col:
             "Property_Area": property_area
         }
 
-        #  starts a try block for safe prediction
+        #  starts safe prediction handling
         try:
-            #  gets the prediction result
+            #  gets the prediction result from the backend logic
             result = predict_loan_status(user_input)
 
-            #  stores the result in session state so it appears under the overview
+            #  stores the prediction result in session state
             st.session_state["loan_result"] = result
 
-            #  reruns the app so the result card is shown immediately
+            #  reruns the app so the result appears under the overview immediately
             st.rerun()
 
-        # This block shows error messages in the app
+        # This block handles prediction errors
         except Exception as exc:
-            #  displays the error
             st.error(f"Prediction failed: {exc}")
