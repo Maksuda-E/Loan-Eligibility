@@ -16,17 +16,14 @@ st.set_page_config(
 st.markdown(
     """
     <style>
+/* REMOVE HEADER */
+        header {visibility: hidden;}
 
-        /* HIDE STREAMLIT DEFAULT UI */
-        header {
-            visibility: hidden;
-            height: 0rem;
+        /* REMOVE TOP SPACE */
+        .block-container {
+            padding-top: 1rem !important;
         }
-
-        #MainMenu {
-            visibility: hidden;
-        }
-
+        
         footer {
             visibility: hidden;
         }
