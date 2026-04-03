@@ -23,7 +23,7 @@ st.markdown(
 
     /* APP BACKGROUND */
     .stApp {
-        background-color: #F0FDF4;
+        background-color: white;
     }
 
     /* Titles */
@@ -44,7 +44,7 @@ st.markdown(
     /* Input fields */
     div[data-baseweb="input"] > div,
     div[data-baseweb="select"] > div {
-        background-color: white;
+        background-color: #f0fdf4;
         border-radius: 8px;
         border: 1px solid #4b5563;
     }
