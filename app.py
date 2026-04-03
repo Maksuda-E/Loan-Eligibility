@@ -239,15 +239,6 @@ with center_col:
             unsafe_allow_html=True
         )
 
-        # This line shows a summary metric for applicant income
-        st.metric("Applicant Income", f"{applicant_income:.0f}")
-
-        # This line shows a summary metric for loan amount
-        st.metric("Loan Amount", f"{loan_amount:.0f}")
-
-        # This line shows a summary metric for loan term
-        st.metric("Loan Term", f"{loan_amount_term:.0f}")
-
     # This line checks whether the prediction button has been clicked
     if predict_button:
 
