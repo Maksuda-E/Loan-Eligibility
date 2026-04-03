@@ -66,7 +66,7 @@ st.markdown(
 
     /* Normal button */
     div.stButton > button {
-        background-color: #16a34a;
+        background-color: #A8E0CC;
         color: white;
         border-radius: 8px;
         padding: 10px;
@@ -77,7 +77,7 @@ st.markdown(
     }
 
     div.stButton > button:hover {
-        background-color: #15803d;
+        background-color: white;
         color: white;
     }
 
