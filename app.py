@@ -44,7 +44,7 @@ st.markdown(
     /* Input fields */
     div[data-baseweb="input"] > div,
     div[data-baseweb="select"] > div {
-        background-color: #f0fdf4;
+        background-color: gray;
         border-radius: 8px;
         border: 1px solid #4b5563;
     }
