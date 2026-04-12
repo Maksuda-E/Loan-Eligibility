@@ -133,6 +133,9 @@ python main.py
 
 streamlit run app.py
 
+# Streamlit Link
+https://loan-eligibility-maksuda.streamlit.app/
+
 # Key Features
 Modular code structure
 Logging and exception handling
