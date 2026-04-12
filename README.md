@@ -131,7 +131,7 @@ python main.py
 
 # Run Streamlit app
 
-streamlit run app.py
+python -m streamlit run app.py
 
 # Streamlit Link
 https://loan-eligibility-maksuda.streamlit.app/
